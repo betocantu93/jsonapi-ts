@@ -19,7 +19,15 @@ export type OperationDecorator = (
 // Generic types for JSONAPI document structure.
 
 export type ResourceAttributes = {
-  [key: string]: string | number | boolean;
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | string[]
+    | number[]
+    | boolean[]
+    | ResourceAttributes
+    | ResourceAttributes[];
 };
 
 export type ResourceRelationships = {
@@ -124,7 +132,12 @@ export type ResourceSchema = {
 };
 
 export type ResourceSchemaAttributes = {
-  [key: string]: StringConstructor | NumberConstructor | BooleanConstructor;
+  [key: string]:
+    | StringConstructor
+    | NumberConstructor
+    | BooleanConstructor
+    | ArrayConstructor
+    | ObjectConstructor;
 };
 
 export type ResourceSchemaRelationships = {
