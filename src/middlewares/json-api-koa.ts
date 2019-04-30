@@ -4,7 +4,6 @@ import { Context, Middleware } from "koa";
 import * as koaBody from "koa-body";
 import * as compose from "koa-compose";
 import Application from "../application";
-import JsonApiErrors from "../json-api-errors";
 import {
   JsonApiDocument,
   JsonApiError,
@@ -14,6 +13,7 @@ import {
 } from "../types";
 import { parse } from "../utils/json-api-params";
 import { camelize, singularize } from "../utils/string";
+import { JsonApiErrors } from "..";
 
 const STATUS_MAPPING = {
   GET: 200,
@@ -31,6 +31,12 @@ export default function jsonApiKoa(
     await authenticate(app, ctx);
 
     const data = urlData(app, ctx);
+
+    if (ctx.request.body.operations && ctx.request.body.data) {
+      throw JsonApiErrors.InvalidPayload({
+        detail: "JSONAPI payload cannot have both 'operations' and 'data' keys"
+      });
+    }
 
     if (ctx.method === "PATCH" && data.resource === "bulk") {
       await handleBulkEndpoint(app, ctx);

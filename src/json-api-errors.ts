@@ -1,10 +1,6 @@
-import { HttpStatusCode, JsonApiError } from "./types";
+import { HttpStatusCode, JsonApiError, ResourceAttributes } from "./types";
 
-const jsonApiErrors: {
-  [key: string]: (args?: {
-    [key: string]: string | number | boolean;
-  }) => JsonApiError;
-} = {
+const jsonApiErrors = {
   UnhandledError: (): JsonApiError => ({
     status: HttpStatusCode.InternalServerError,
     code: "unhandled_error"
@@ -23,6 +19,12 @@ const jsonApiErrors: {
   RecordNotExists: (): JsonApiError => ({
     status: HttpStatusCode.NotFound,
     code: "not_found"
+  }),
+
+  InvalidPayload: ({ detail }: { detail: string }): JsonApiError => ({
+    detail,
+    status: HttpStatusCode.BadRequest,
+    code: "invalid_payload"
   })
 };
 
